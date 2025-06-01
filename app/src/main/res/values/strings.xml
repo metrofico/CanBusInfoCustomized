@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CanBusInfoCustomized</string>
+    <string name="home_lighting">Luces de acompañamiento</string>
+    <string name="power_steering_value">Comfort</string>
+</resources>
