@@ -1,5 +1,7 @@
 package com.hzbhd.systemstatus.proxy;
 
+import android.util.Log;
+
 import com.hzbhd.systemstatus.proxy.aidl.IServiceConnectCallback;
 import com.hzbhd.systemstatus.proxy.aidl.ISystemStatusManager;
 
@@ -38,6 +40,7 @@ public class ServiceStateManager {
         synchronized (this) {
             ISystemStatusManager iSystemStatusManager = SystemStatusManager.getISystemStatusManager();
             if (iSystemStatusManager == null) {
+                Log.d("SystemStatusManager", "ISystemStatusManager is null");
                 return;
             }
             if (!this.mServiceConnectListenerList.containsKey(i)) {

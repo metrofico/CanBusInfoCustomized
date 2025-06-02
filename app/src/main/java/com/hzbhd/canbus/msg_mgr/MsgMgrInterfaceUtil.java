@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.hzbhd.log.LoggerUI;
 import com.hzbhd.canbus.car.swm.MsgMgr;
-import com.hzbhd.canbus.config.CanbusConfig;
 import com.hzbhd.canbus.interfaces.MsgMgrInterface;
 
 public class MsgMgrInterfaceUtil implements MsgMgrInterface {
@@ -18,6 +18,7 @@ public class MsgMgrInterfaceUtil implements MsgMgrInterface {
             throw new IllegalArgumentException("context no puede ser null");
         }
         this.context = context;
+        this.mMsgMgrInterface = getMMsgMgrInterface();
     }
 
     private MsgMgrInterface getMMsgMgrInterface() {
@@ -75,6 +76,7 @@ public class MsgMgrInterfaceUtil implements MsgMgrInterface {
     @Override
     public void initCommand(Context var1) {
 
+        LoggerUI.d("MsgMgrInterfaceUtil", "initCommand");
     }
 
     @Override
@@ -114,7 +116,7 @@ public class MsgMgrInterfaceUtil implements MsgMgrInterface {
 
     @Override
     public void serialDataChange(Context var1, byte[] var2) {
-
+        LoggerUI.d("MsgMgrInterfaceUtil", "serialDataChange bytes");
     }
 
     @Override

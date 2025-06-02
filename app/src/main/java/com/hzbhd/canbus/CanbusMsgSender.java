@@ -1,9 +1,8 @@
 package com.hzbhd.canbus;
 
-import static com.hzbhd.proxy.mcu.core.MCUMainManager.TAG;
-
 import android.util.Log;
 
+import com.hzbhd.log.LoggerUI;
 import com.hzbhd.proxy.mcu.core.MCUMainManager;
 
 public class CanbusMsgSender {
@@ -21,6 +20,7 @@ public class CanbusMsgSender {
         }
 
         Log.d("CAN_TX", logBuilder.toString().trim());
+        LoggerUI.d("CAN_TX", logBuilder.toString().trim());
     }
 
     public static void sendMsg(byte[] data) {
@@ -31,6 +31,7 @@ public class CanbusMsgSender {
             // Enviar al MCU con tipo 39
             MCUMainManager.getInstance().sendMCUCanboxData(39, data);
         } catch (Exception e) {
+            LoggerUI.d("CAN_SEND", "sendMsg: error: " + bytes2HexString(data, data.length) + " ext: " + e.getMessage());
             // Log de error en modo debug nivel 5
             Log.e("CAN_SEND", "sendMsg: error: " + bytes2HexString(data, data.length), e);
         }

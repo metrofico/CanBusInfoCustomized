@@ -4,6 +4,8 @@ import static com.hzbhd.proxy.mcu.core.MCUMainManager.TAG;
 
 import android.util.Log;
 
+import com.hzbhd.log.LoggerUI;
+
 public class DefaultSharedUtilReflection {
 
     public static int getInt(String key, int defaultValue) {
@@ -16,6 +18,7 @@ public class DefaultSharedUtilReflection {
                 return (Integer) result;
             }
         } catch (Exception e) {
+            LoggerUI.e(TAG, "Error al invocar DefaultSharedUtil.getInt: ", e);
             Log.e(TAG, "Error al invocar DefaultSharedUtil.getInt: " + e.getMessage(), e);
         }
         return defaultValue; // fallback si falla

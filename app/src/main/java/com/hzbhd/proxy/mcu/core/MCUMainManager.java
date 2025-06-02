@@ -5,6 +5,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.hzbhd.commontools.SourceConstantsDef;
+import com.hzbhd.log.LoggerUI;
 import com.hzbhd.proxy.mcu.aidl.IMCUCanBoxControlCallback;
 import com.hzbhd.proxy.mcu.aidl.IMCUMainService;
 import com.hzbhd.proxy.mcu.aidl.IMCUMsgCallback;
@@ -18,7 +19,7 @@ import java.util.Set;
 
 public class MCUMainManager implements IMCUMainManager {
     public static String TAG = "CanBusCustomized";
-    private static MCUMainManager instance;
+    private static volatile MCUMainManager instance;
     private IMCUMainService mMCUMainService;
     private final Set<IMCUMainListener> mMCUMainList = new HashSet<>();
     private final HashSet<IMCUCanBoxControlListener> mMCUCanList = new HashSet<>();
@@ -42,7 +43,11 @@ public class MCUMainManager implements IMCUMainManager {
 
     public static MCUMainManager getInstance() {
         if (instance == null) {
-            instance = new MCUMainManager();
+            synchronized (MCUMainManager.class) {
+                if (instance == null) {
+                    instance = new MCUMainManager();
+                }
+            }
         }
         return instance;
     }
@@ -180,12 +185,13 @@ public class MCUMainManager implements IMCUMainManager {
     }
 
     public IMCUMainService getMCUMainService() {
-        IMCUMainService service = IMCUMainService.Stub.asInterface(MCUParseUtil.ServiceManagerGetService("bhd.mcu.service"));
+        IMCUMainService service;
         if (this.mMCUMainService == null) {
+            service = IMCUMainService.Stub.asInterface(MCUParseUtil.ServiceManagerGetService("bhd.mcu.service"));
             this.mMCUMainService = service;
             onServiceConn();
         }
-        return service;
+        return this.mMCUMainService;
     }
 
     @Override
@@ -283,6 +289,7 @@ public class MCUMainManager implements IMCUMainManager {
                 mCUMainService.sendMCUCanboxData(i, bArr);
             } catch (RemoteException e) {
                 e.printStackTrace();
+                LoggerUI.e("MCUMainManager", "sendMCUCanboxData: error", e);
             }
         }
     }
@@ -295,6 +302,8 @@ public class MCUMainManager implements IMCUMainManager {
                 mCUMainService.sendMCUDebugData(bArr);
             } catch (RemoteException e) {
                 e.printStackTrace();
+
+                LoggerUI.e("MCUMainManager", "sendMCUDebugData: error", e);
             }
         }
     }
@@ -307,6 +316,7 @@ public class MCUMainManager implements IMCUMainManager {
                 mCUMainService.sendTestCmd(bArr);
             } catch (RemoteException e) {
                 e.printStackTrace();
+                LoggerUI.e("MCUMainManager", "sendTestCmd: error", e);
             }
         }
     }
@@ -319,20 +329,21 @@ public class MCUMainManager implements IMCUMainManager {
                 mCUMainService.setSendSleepStatus(z);
             } catch (RemoteException e) {
                 e.printStackTrace();
+                LoggerUI.e("MCUMainManager", "setSendSleepStatus: error", e);
             }
         }
     }
 
     @Override
     public void setUpgradeStatus(boolean z) {
-        IMCUMainService mCUMainService = getMCUMainService();
+        /*IMCUMainService mCUMainService = getMCUMainService();
         if (mCUMainService != null) {
             try {
                 mCUMainService.setUpgradeStatus(z);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     @Override

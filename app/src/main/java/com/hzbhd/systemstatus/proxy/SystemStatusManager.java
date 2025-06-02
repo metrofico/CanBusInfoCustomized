@@ -8,6 +8,7 @@ public class SystemStatusManager {
     private static final String TAG = "SystemStatusManager";
 
     protected static ISystemStatusManager getISystemStatusManager() {
+
         return ISystemStatusManager.Stub.asInterface(MCUParseUtil.ServiceManagerGetService(SERVICE_NAME_SYSTEM_STATUS));
     }
 }

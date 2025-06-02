@@ -4,6 +4,7 @@ import static com.hzbhd.proxy.mcu.core.MCUMainManager.TAG;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -20,6 +21,7 @@ import com.hzbhd.canbus.msg_mgr.MsgMgrFactory;
 import com.hzbhd.canbus.util.ContextUtil;
 import com.hzbhd.canbus.util.SharePreUtil;
 import com.hzbhd.cantype.CanTypeUtil;
+import com.hzbhd.log.LoggerUI;
 import com.hzbhd.proxy.mcu.core.IMCUCanBoxControlListener;
 import com.hzbhd.proxy.mcu.core.MCUMainManager;
 
@@ -29,6 +31,7 @@ public class CanbusMsgServiceSwm extends Service {
 
     private final Handler mHandler;
 
+    private final Binder myBinder = new Binder();
     private HandlerThread mHandlerThread;
 
     public CanbusMsgServiceSwm() {
@@ -40,12 +43,13 @@ public class CanbusMsgServiceSwm extends Service {
     private final IMCUCanBoxControlListener mCanBoxControlListener = new IMCUCanBoxControlListener() {
         @Override
         public void notifyCanboxData(int var1, byte[] var2) {
-
+            LoggerUI.d("IMCUCanBoxControlListener", "notifyCanboxData");
         }
 
         @Override
         public void onMcuConn() {
             Log.d("CAN_STATE", "onMcuConn");
+            LoggerUI.d("CAN_STATE", "onMcuConn");
             Message var1 = new Message();
             var1.what = 3;
             mHandler.sendMessage(var1);
@@ -55,7 +59,14 @@ public class CanbusMsgServiceSwm extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return this.myBinder;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        // Lógica del servicio
+        // Si quieres que el servicio se mantenga incluso si es detenido por el sistema
+        return START_STICKY;
     }
 
     @Override // android.app.Service
@@ -63,6 +74,7 @@ public class CanbusMsgServiceSwm extends Service {
         super.onCreate();
         ContextUtil.getInstance().setContext(this);
         //CanbusInfoChangeListener.getInstance();
+        LoggerUI.d("CanbusMsgServiceSwm", "onCreate");
         Log.i(TAG, "onCreate: branches/hy");
         //this.mCanbusTimeReceiver = new DateTimeReceiver();
         //IntentFilter intentFilter = new IntentFilter();
@@ -77,6 +89,8 @@ public class CanbusMsgServiceSwm extends Service {
             getMsgMgrInterface().initCommand(this);
         }
         registerCanboxListener();
+
+        LoggerUI.d("CanbusMsgServiceSwm", "onCreated");
         // MediaShareData.INSTANCE.registerModuleListener(this);
         //  ActionControlUtil.registerHotKeyListener(this);
         //registerAccStateListener();
@@ -98,15 +112,18 @@ public class CanbusMsgServiceSwm extends Service {
         if (getMsgMgrInterface() != null) {
             getMsgMgrInterface().destroyCommand();
         }
-
+        LoggerUI.d("CanbusMsgServiceSwm", "onDestroyed");
     }
 
     private boolean isDataBaseReady() {
         int var1 = Integer.parseInt(SharePreUtil.getStringValue(this, "share_pre_last_version_code", "0"));
         Log.d(TAG, "isDataBaseReady -> lastVersionCode:" + var1);
+
         if (var1 <= 2024031119) {
             SharePreUtil.setStringValue(this, "share_pre_last_version_code", String.valueOf(2024031119));
         }
+
+        LoggerUI.d("CanbusMsgServiceSwm", "isDatabaseReady");
         return true;
     }
 
@@ -115,9 +132,12 @@ public class CanbusMsgServiceSwm extends Service {
 
         if (lista == null || lista.isEmpty()) {
             Log.i(TAG, "getDbCanTypeAllEntity: canTypeId: " + canTypeId);
+            LoggerUI.d("CanbusMsgServiceSwm", "getDbCanTypeAllEntity: canTypeId: " + canTypeId);
             //CanbusConfig.INSTANCE.setCanType(0);
             return getDbCanTypeAllEntity(0);
         } else {
+
+            LoggerUI.d("CanbusMsgServiceSwm", "Loaded: getDbCanTypeAllEntity: canTypeId: " + canTypeId);
             int selectedPosition = CanbusConfig.INSTANCE.getSelectCarPosition();
             //LogUtil.showLog("getDbCanTypeAllEntity selectPosition: " + selectedPosition);
             return selectedPosition < lista.size() ? lista.get(selectedPosition) : lista.get(0);
@@ -127,13 +147,17 @@ public class CanbusMsgServiceSwm extends Service {
     private void normalProgress(int canTypeId) {
         Log.d(TAG, "normalProgress -> canType: " + canTypeId);
 
+        LoggerUI.d("CanbusMsgServiceSwm", "normalProgress -> canType: " + canTypeId);
         CanTypeAllEntity entity = getDbCanTypeAllEntity(canTypeId);
 
         if (entity == null) {
             Log.d(TAG, "normalProgress entity == null");
+
+            LoggerUI.d("CanbusMsgServiceSwm", "normalProgress entity == null");
         } else {
             Log.d(TAG, "CanbusMsgService, current can type: [" + entity.getCar_model() + "] [" + entity.getCan_type_id() + "] isShowApp:[" + entity.getIs_show_app() + "] is_use_new_camera:[" + entity.getIs_use_new_camera() + "] is_use_new_app:[" + entity.getIs_use_new_app() + "]");
 
+            LoggerUI.d("CanbusMsgServiceSwm", "CanbusMsgService, current can type: [" + entity.getCar_model() + "] [" + entity.getCan_type_id() + "] isShowApp:[" + entity.getIs_show_app() + "] is_use_new_camera:[" + entity.getIs_use_new_camera() + "] is_use_new_app:[" + entity.getIs_use_new_app() + "]");
             boolean isUseNewApp = entity.getIs_use_new_app() == 1;
             SharePreUtil.setBoolValue(this, "share_pre_is_use_new_app", isUseNewApp);
             // Notificar al MsgMgrInterface
@@ -145,7 +169,7 @@ public class CanbusMsgServiceSwm extends Service {
     }
 
     public void canbusInfoChange(byte[] bArr) {
-
+        LoggerUI.d("InternalHandler", "canbusInfoChange ");
     }
 
     private MsgMgrInterface getMsgMgrInterface() {
@@ -153,6 +177,7 @@ public class CanbusMsgServiceSwm extends Service {
     }
 
     public void serialDataChange(byte[] var1) {
+        LoggerUI.d("CanbusMsgServiceSwm", "serialDataChange -> bytes");
         if (var1 != null && var1.length > 1 && this.getMsgMgrInterface() != null) {
             this.getMsgMgrInterface().serialDataChange(this, var1);
         }
@@ -169,6 +194,7 @@ public class CanbusMsgServiceSwm extends Service {
 
         @Override
         public void handleMessage(Message message) {
+            LoggerUI.d("InternalHandler", "handleMessage -> " + message.what);
             switch (message.what) {
                 case 1:
                     canbusInfoChange((byte[]) message.obj);
