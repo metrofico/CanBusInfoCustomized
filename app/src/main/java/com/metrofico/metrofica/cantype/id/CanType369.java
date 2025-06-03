@@ -1,0 +1,17 @@
+package com.metrofico.metrofica.cantype.id;
+
+import com.metrofico.metrofica.canbus.adapter.bean.CanTypeAllEntity;
+import com.metrofico.metrofica.cantype.CanTypeBase;
+
+import java.util.ArrayList;
+
+import kotlin.collections.CollectionsKt;
+
+
+public final class CanType369 implements CanTypeBase {
+   private final ArrayList list = CollectionsKt.arrayListOf(new CanTypeAllEntity[]{new CanTypeAllEntity("威驰", "上汽", "荣威 950", " ", "Hiworld", "SAIC", "950", "", 369, 1, 0, 0, 1, 5, 1, 1, 1, " "), new CanTypeAllEntity("威驰", "上汽", "荣威 550", "2011-2013", "Hiworld", "SAIC", "550", "2011-2013", 369, 2, 0, 0, 1, 5, 1, 1, 1, " "), new CanTypeAllEntity("威驰", "上汽", "名爵 6", "2011-2013", "Hiworld", "SAIC", "6", "2011-2013", 369, 3, 0, 0, 1, 5, 1, 1, 1, " "), new CanTypeAllEntity("威驰", "上汽", "荣威 550", "2013-至今", "Hiworld", "SAIC", "550", "2013-", 369, 4, 0, 0, 1, 5, 1, 1, 1, " "), new CanTypeAllEntity("威驰", "上汽", "名爵 6", "2013-至今", "Hiworld", "SAIC", "6", "2013-", 369, 5, 0, 0, 1, 5, 1, 1, 1, " "), new CanTypeAllEntity("威驰", "上汽", "荣威 360", " ", "Hiworld", "SAIC", "360", "", 369, 6, 0, 0, 1, 5, 1, 1, 1, " "), new CanTypeAllEntity("威驰", "上汽", "锐腾", " ", "Hiworld", "SAIC", "", "", 369, 7, 0, 0, 1, 5, 1, 1, 1, " ")});
+
+   public ArrayList getList() {
+      return this.list;
+   }
+}

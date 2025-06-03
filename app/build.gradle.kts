@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.hzbhd"
+    namespace = "com.metrofico"
     compileSdk = 33
     buildFeatures {
         aidl = true
@@ -20,11 +20,9 @@ android {
         }
     }
     defaultConfig {
-        applicationId = "com.hzbhd"
+        applicationId = "com.metrofico"
         minSdk = 33
         targetSdk = 33
-        versionCode = 13
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

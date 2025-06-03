@@ -1,0 +1,17 @@
+package com.metrofico.metrofica.cantype.id;
+
+import com.metrofico.metrofica.canbus.adapter.bean.CanTypeAllEntity;
+import com.metrofico.metrofica.cantype.CanTypeBase;
+
+import java.util.ArrayList;
+
+import kotlin.collections.CollectionsKt;
+
+
+public final class CanType266 implements CanTypeBase {
+   private final ArrayList list = CollectionsKt.arrayListOf(new CanTypeAllEntity[]{new CanTypeAllEntity("威驰", "中华", "H3", "2017-Present", "Hiworld", "CMC", "H3", "2017-Present", 266, 0, 2, 0, 1, 5, 1, 0, 0, "null"), new CanTypeAllEntity("威驰", "中华", "V3", "2016-Present", "Hiworld", "CMC", "V3", "2016-Present", 266, 1, 2, 0, 1, 5, 1, 0, 0, "null"), new CanTypeAllEntity("威驰", "中华", "V3 low", "2016-Present", "Hiworld", "CMC", "V3 low", "2016-Present", 266, 2, 2, 0, 1, 5, 1, 0, 0, "null"), new CanTypeAllEntity("威驰", "华晨", "华颂HUASONG 7", "--", "Hiworld", "Brilliance", "华颂HUASONG 7", "--", 266, 3, 3, 0, 1, 5, 1, 0, 0, "null")});
+
+   public ArrayList getList() {
+      return this.list;
+   }
+}
